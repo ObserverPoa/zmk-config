@@ -13,157 +13,261 @@
 #include <dt-bindings/led/led.h>
 
 #define CALC 0
-#define APPS 1
-#define GAME 2
-#define RGB_BT 3
-#define ORTHO_L 4
+#define NAVI 1
+#define RGB_BT 2
+#define EXTRA1 3
+#define EXTRA2 4
+#define EXTRA3 5
+#define EXTRA4 6
+#define PORTAL_EXTRA 7
 
-#define TIMEOUT 200
+
+#define MACRO_EXTRA(NAME, KEYS) \
+    macro_extra_ ## NAME: macro_extra_ ## NAME { \
+        label = ZMK_MACRO_STRINGIFY(ZM_ ## NAME); \
+        compatible = "zmk,behavior-macro"; \
+        #binding-cells = <0>; \
+        wait-ms = <0>; \
+        tap-ms = <0>; \
+        bindings \
+            = <&macro_press KEYS> \
+            , <&macro_pause_for_release> \
+            , <&macro_release KEYS> \
+            ; \
+    };
+    
 
 / {
 
     behaviors {
-      td0: tap_dance_0 {
-          compatible = "zmk,behavior-tap-dance";
-          label = "TAP_DANCE_0";
-          #binding-cells = <0>;
-          tapping-term-ms = <200>;
-          bindings = <&to APPS>, <&to GAME>;
-      };
-
-      td1: tap_dance_1 {
-          compatible = "zmk,behavior-tap-dance";
-          label = "TAP_DANCE_1";
-          #binding-cells = <0>;
-          tapping-term-ms = <500>;
-          #bindings = <&mt B A>, <&kp C>, <&kp D>;
-          bindings = <&kp LC(LS(NUMBER_1))>, <&kp LC(LS(N2))>, <&kp LC(LS(N3))>;
-      };
-
-      qts:quotes {
-          compatible = "zmk,behavior-hold-tap";
-          label = "QUOTATION_MARKS";
-          #binding-cells = <2>;
-          flavor = "hold-preferred";
-          tapping-term-ms = <200>;
-          bindings = <&dqts>, <&sqts>;
-      };
-
-  };
-
-    macros {
-            triple_zero: triple_zero {
-                label = "triple_zero";
-                compatible = "zmk,behavior-macro";
-                #binding-cells = <0>;
-                wait-ms = <40>;
-                tap-ms = <40>;
-                bindings = <&kp NUMBER_0 &kp NUMBER_0 &kp NUMBER_0>;
-            };
-
-            prts: parentheses {
-                label = "PARENTHESES";
-                compatible = "zmk,behavior-macro";
-                #binding-cells = <0>;
-                wait-ms = <40>;
-                tap-ms = <40>;
-                bindings
-                      = <&kp LPAR &kp RPAR>
-                      , <&kp LEFT>;
-            };
-
-            dqts: double_quotes {
-                label = "DOUBLE_QUOTES";
-                compatible = "zmk,behavior-macro";
-                #binding-cells = <0>;
-                wait-ms = <40>;
-                tap-ms = <40>;
-                bindings
-                      = <&kp DQT &kp DQT>
-                      , <&kp LEFT>;
-            };
-
-            sqts: single_quotes {
-                label = "SINGLE_QUOTES";
-                compatible = "zmk,behavior-macro";
-                #binding-cells = <0>;
-                wait-ms = <40>;
-                tap-ms = <40>;
-                bindings
-                      = <&kp SQT &kp SQT>
-                      , <&kp LEFT>;
-            };
+        moto: momentary_to {
+            compatible = "zmk,behavior-hold-tap";
+            label = "MOMENTARY_TO_LAYER";
+            #binding-cells = <2>;
+            tapping-term-ms = <400>;
+            quick-tap-ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&mo>, <&to>;
         };
+
+        toto: to_to {
+            compatible = "zmk,behavior-hold-tap";
+            label = "TO_TO_LAYER";
+            #binding-cells = <2>;
+            tapping-term-ms = <400>;
+            quick-tap-ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&to>, <&to>;
+        };
+
+        ht_macro1: ht_macro1 {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HT_MACRO1";
+            #binding-cells = <2>;
+            tapping-term-ms = <300>;
+            quick-tap-ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&macro_extra_103>, <&macro_extra_102>;
+        };
+
+        ht_macro2: ht_macro2 {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HT_MACRO2";
+            #binding-cells = <2>;
+            tapping-term-ms = <300>;
+            quick-tap-ms = <0>;
+            flavor = "tap-preferred";
+            bindings = <&macro_extra_105>, <&macro_extra_104>;
+        };
+    };
 
     combos {
         compatible = "zmk,combos";
-        combo_bootloader {
-            timeout-ms = <TIMEOUT>;
-            key-positions = <1 4>;
-            bindings = <&bootloader>;
-        };
+
+        /* on CALC, NAVI, RGB_BT layers */
         combo_reset {
-            timeout-ms = <TIMEOUT>;
+            timeout-ms = <100>;
+            layers = <0 1 2>;
             key-positions = <1 3>;
             bindings = <&reset>;
         };
-
-        combo_btnxt {
-            timeout-ms = <TIMEOUT>;
-            key-positions = <1 6>;
-            bindings = <&bt BT_NXT>;
-        };
-        combo_btprv {
-            timeout-ms = <TIMEOUT>;
-            key-positions = <1 7>;
-            bindings = <&bt BT_PRV>;
-        };
-        combo_btclr {
-            timeout-ms = <TIMEOUT>;
-            key-positions = <1 8>;
-            bindings = <&bt BT_CLR>;
+        combo_bootloader {
+            timeout-ms = <100>;
+            layers = <0 1 2>;
+            key-positions = <1 4>;
+            bindings = <&bootloader>;
         };
 
-        combo_layer0 {
-            timeout-ms = <TIMEOUT>;
+        combo_to_extra1 {
+            timeout-ms = <100>;
+            layers = <0 1 2>;
+            key-positions = <1 22>;
+            bindings = <&to EXTRA1>;
+        };
+        combo_to_calc {
+            timeout-ms = <100>;
+            layers = <0 1 2>;
             key-positions = <1 16>;
             bindings = <&to CALC>;
         };
-        combo_layer1 {
-            timeout-ms = <TIMEOUT>;
+        combo_to_navi {
+            timeout-ms = <100>;
+            layers = <0 1 2>;
             key-positions = <1 17>;
-            bindings = <&to APPS>;
+            bindings = <&to NAVI>;
         };
-        combo_layer2 {
-            timeout-ms = <TIMEOUT>;
+        combo_to_rgb_bt {
+            timeout-ms = <100>;
+            layers = <0 1 2>;
             key-positions = <1 18>;
-            bindings = <&to GAME>;
-        };
-
-        combo_layer3 {
-            timeout-ms = <TIMEOUT>;
-            key-positions = <1 11>;
             bindings = <&to RGB_BT>;
         };
+    };
 
-        combo_layer4 {
-            timeout-ms = <TIMEOUT>;
-            key-positions = <1 12>;
-            bindings = <&to ORTHO_L>;
-        };
+    macros {
+        MACRO_EXTRA(1, &kp F13 &kp F14)
+        MACRO_EXTRA(2, &kp F13 &kp F15)
+        MACRO_EXTRA(3, &kp F13 &kp F16)
+        MACRO_EXTRA(4, &kp F13 &kp F17)
+        MACRO_EXTRA(5, &kp F13 &kp F18)
+        MACRO_EXTRA(6, &kp F13 &kp F19)
+        MACRO_EXTRA(7, &kp F13 &kp F20)
+        MACRO_EXTRA(8, &kp F13 &kp F21)
+        MACRO_EXTRA(9, &kp F13 &kp F22)
+        MACRO_EXTRA(10, &kp F13 &kp F23)
+        MACRO_EXTRA(11, &kp F13 &kp F24)
 
-        combo_rgb {
-            timeout-ms = <TIMEOUT>;
-            key-positions = <1 21>;
-            bindings = <&rgb_ug RGB_TOG>;
-        };
+        MACRO_EXTRA(12, &kp F14 &kp F13)
+        MACRO_EXTRA(13, &kp F14 &kp F15)
+        MACRO_EXTRA(14, &kp F14 &kp F16)
+        MACRO_EXTRA(15, &kp F14 &kp F17)
+        MACRO_EXTRA(16, &kp F14 &kp F18)
+        MACRO_EXTRA(17, &kp F14 &kp F19)
+        MACRO_EXTRA(18, &kp F14 &kp F20)
+        MACRO_EXTRA(19, &kp F14 &kp F21)
+        MACRO_EXTRA(20, &kp F14 &kp F22)
+        MACRO_EXTRA(21, &kp F14 &kp F23)
+        MACRO_EXTRA(22, &kp F14 &kp F24)
+        
+        MACRO_EXTRA(23, &kp F15 &kp F13)
+        MACRO_EXTRA(24, &kp F15 &kp F14)
+        MACRO_EXTRA(25, &kp F15 &kp F16)
+        MACRO_EXTRA(26, &kp F15 &kp F17)
+        MACRO_EXTRA(27, &kp F15 &kp F18)
+        MACRO_EXTRA(28, &kp F15 &kp F19)
+        MACRO_EXTRA(29, &kp F15 &kp F20)
+        MACRO_EXTRA(30, &kp F15 &kp F21)
+        MACRO_EXTRA(31, &kp F15 &kp F22)
+        MACRO_EXTRA(32, &kp F15 &kp F23)
+        MACRO_EXTRA(33, &kp F15 &kp F24)
 
-        combo_JPKey {
-            timeout-ms = <TIMEOUT>;
-            key-positions = <11 13>;
-            bindings = <&kp LA(GRAVE)>;
-        };
+        MACRO_EXTRA(34, &kp F16 &kp F13)
+        MACRO_EXTRA(35, &kp F16 &kp F14)
+        MACRO_EXTRA(36, &kp F16 &kp F15)
+        MACRO_EXTRA(37, &kp F16 &kp F17)
+        MACRO_EXTRA(38, &kp F16 &kp F18)
+        MACRO_EXTRA(39, &kp F16 &kp F19)
+        MACRO_EXTRA(40, &kp F16 &kp F20)
+        MACRO_EXTRA(41, &kp F16 &kp F21)
+        MACRO_EXTRA(42, &kp F16 &kp F22)
+        MACRO_EXTRA(43, &kp F16 &kp F23)
+        MACRO_EXTRA(44, &kp F16 &kp F24)
 
+        MACRO_EXTRA(45, &kp F17 &kp F13)
+        MACRO_EXTRA(46, &kp F17 &kp F14)
+        MACRO_EXTRA(47, &kp F17 &kp F15)
+        MACRO_EXTRA(48, &kp F17 &kp F16)
+        MACRO_EXTRA(49, &kp F17 &kp F18)
+        MACRO_EXTRA(50, &kp F17 &kp F19)
+        MACRO_EXTRA(51, &kp F17 &kp F20)
+        MACRO_EXTRA(52, &kp F17 &kp F21)
+        MACRO_EXTRA(53, &kp F17 &kp F22)
+        MACRO_EXTRA(54, &kp F17 &kp F23)
+        MACRO_EXTRA(55, &kp F17 &kp F24)
+
+        MACRO_EXTRA(56, &kp F18 &kp F13)
+        MACRO_EXTRA(57, &kp F18 &kp F14)
+        MACRO_EXTRA(58, &kp F18 &kp F15)
+        MACRO_EXTRA(59, &kp F18 &kp F16)
+        MACRO_EXTRA(60, &kp F18 &kp F17)
+        MACRO_EXTRA(61, &kp F18 &kp F19)
+        MACRO_EXTRA(62, &kp F18 &kp F20)
+        MACRO_EXTRA(63, &kp F18 &kp F21)
+        MACRO_EXTRA(64, &kp F18 &kp F22)
+        MACRO_EXTRA(65, &kp F18 &kp F23)
+        MACRO_EXTRA(66, &kp F18 &kp F24)
+
+        MACRO_EXTRA(67, &kp F19 &kp F13)
+        MACRO_EXTRA(68, &kp F19 &kp F14)
+        MACRO_EXTRA(69, &kp F19 &kp F15)
+        MACRO_EXTRA(70, &kp F19 &kp F16)
+        MACRO_EXTRA(71, &kp F19 &kp F17)
+        MACRO_EXTRA(72, &kp F19 &kp F18)
+        MACRO_EXTRA(73, &kp F19 &kp F20)
+        MACRO_EXTRA(74, &kp F19 &kp F21)
+        MACRO_EXTRA(75, &kp F19 &kp F22)
+        MACRO_EXTRA(76, &kp F19 &kp F23)
+        MACRO_EXTRA(77, &kp F19 &kp F24)
+
+        MACRO_EXTRA(78, &kp F20 &kp F13)
+        MACRO_EXTRA(79, &kp F20 &kp F14)
+        MACRO_EXTRA(80, &kp F20 &kp F15)
+        MACRO_EXTRA(81, &kp F20 &kp F16)
+        MACRO_EXTRA(82, &kp F20 &kp F17)
+        MACRO_EXTRA(83, &kp F20 &kp F18)
+        MACRO_EXTRA(84, &kp F20 &kp F19)
+        MACRO_EXTRA(85, &kp F20 &kp F21)
+        MACRO_EXTRA(86, &kp F20 &kp F22)
+        MACRO_EXTRA(87, &kp F20 &kp F23)
+        MACRO_EXTRA(88, &kp F20 &kp F24)
+
+        MACRO_EXTRA(89, &kp F21 &kp F13)
+        MACRO_EXTRA(90, &kp F21 &kp F14)
+        MACRO_EXTRA(91, &kp F21 &kp F15)
+        MACRO_EXTRA(92, &kp F21 &kp F16)
+        MACRO_EXTRA(93, &kp F21 &kp F17)
+        MACRO_EXTRA(94, &kp F21 &kp F18)
+        MACRO_EXTRA(95, &kp F21 &kp F19)
+        MACRO_EXTRA(96, &kp F21 &kp F20)
+        MACRO_EXTRA(97, &kp F21 &kp F22)
+        MACRO_EXTRA(98, &kp F21 &kp F23)
+        MACRO_EXTRA(99, &kp F21 &kp F24)
+
+        MACRO_EXTRA(100, &kp F22 &kp F13)
+        MACRO_EXTRA(101, &kp F22 &kp F14)
+        MACRO_EXTRA(102, &kp F22 &kp F15)
+        MACRO_EXTRA(103, &kp F22 &kp F16)
+        MACRO_EXTRA(104, &kp F22 &kp F17)
+        MACRO_EXTRA(105, &kp F22 &kp F18)
+        MACRO_EXTRA(106, &kp F22 &kp F19)
+        MACRO_EXTRA(107, &kp F22 &kp F20)
+        MACRO_EXTRA(108, &kp F22 &kp F21)
+        MACRO_EXTRA(109, &kp F22 &kp F23)
+        MACRO_EXTRA(110, &kp F22 &kp F24)
+
+        MACRO_EXTRA(111, &kp F23 &kp F13)
+        MACRO_EXTRA(112, &kp F23 &kp F14)
+        MACRO_EXTRA(113, &kp F23 &kp F15)
+        MACRO_EXTRA(114, &kp F23 &kp F16)
+        MACRO_EXTRA(115, &kp F23 &kp F17)
+        MACRO_EXTRA(116, &kp F23 &kp F18)
+        MACRO_EXTRA(117, &kp F23 &kp F19)
+        MACRO_EXTRA(118, &kp F23 &kp F20)
+        MACRO_EXTRA(119, &kp F23 &kp F21)
+        MACRO_EXTRA(120, &kp F23 &kp F22)
+        MACRO_EXTRA(121, &kp F23 &kp F24)
+
+        MACRO_EXTRA(122, &kp F24 &kp F13)
+        MACRO_EXTRA(123, &kp F24 &kp F14)
+        MACRO_EXTRA(124, &kp F24 &kp F15)
+        MACRO_EXTRA(125, &kp F24 &kp F16)
+        MACRO_EXTRA(126, &kp F24 &kp F17)
+        MACRO_EXTRA(127, &kp F24 &kp F18)
+        MACRO_EXTRA(128, &kp F24 &kp F19)
+        MACRO_EXTRA(129, &kp F24 &kp F20)
+        MACRO_EXTRA(130, &kp F24 &kp F21)
+        MACRO_EXTRA(131, &kp F24 &kp F22)
+        MACRO_EXTRA(132, &kp F24 &kp F23)
     };
 
     keymap {
@@ -171,63 +275,100 @@
 
         calc_layer {
             bindings = <
-                &none           &kp F19        &kp ASTERISK   &kp SLASH       &mt ESC BACKSPACE
-                &none           &kp NUMBER_7   &kp NUMBER_8   &kp NUMBER_9    &kp PLUS
-                &none           &kp NUMBER_4   &kp NUMBER_5   &kp NUMBER_6    &kp MINUS
-                &mt LC(LA(LS(E))) C_MUTE      &kp NUMBER_1   &kp NUMBER_2   &kp NUMBER_3    &kp ENTER
-                &td0            &kp NUMBER_0   &triple_zero   &mt COMMA DOT   &kp ENTER
+                &none           &tog NAVI      &kp KP_DIVIDE   &kp KP_MULTIPLY   &kp KP_MINUS
+                &none           &kp NUMBER_7   &kp NUMBER_8    &kp NUMBER_9      &kp KP_PLUS
+                &none           &kp NUMBER_4   &kp NUMBER_5    &kp NUMBER_6      &kp EQUAL
+                &kp C_MUTE      &kp NUMBER_1   &kp NUMBER_2    &kp NUMBER_3      &kp ENTER
+                &kp BACKSPACE   &kp COMMA      &kp NUMBER_0    &kp DOT           &kp ENTER
             >;
 
-            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+            sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP>;
         };
 
-        apps_layer {
+        nav_layer {
             bindings = <
-               &none            &to CALC         &kp F13          &kp F14          &kp F15
-               &none            &kp F16          &kp F17          &kp F18          &kp LC(PG_UP)
-               &none            &kp LC(LS(NUMBER_1)) &kp LC(LS(NUMBER_2))  &mt LA(GRAVE) LC(LS(NUMBER_3))   &kp LC(PG_DN)
-               &trans           &prts            &qts 0 0         &kp LG(LS(RIGHT))  &kp ENTER
-               &trans           &kp LC(X)        &kp LC(C)        &kp LC(LS(V))      &kp ENTER
+               &none            &tog NAVI    &kp KP_DIVIDE   &kp KP_MULTIPLY   &kp KP_MINUS
+               &none            &kp HOME     &kp UP          &kp PAGE_UP       &kp KP_PLUS
+               &none            &kp LEFT     &none           &kp RIGHT         &kp EQUAL
+               &kp C_MUTE       &kp END      &kp DOWN        &kp PAGE_DOWN     &kp ENTER
+               &kp BACKSPACE    &kp INSERT   &none           &kp DEL           &kp ENTER
            >;
 
-           sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
-        };
-
-        game_layer {
-            bindings = <
-               &none           &to CALC       &kp F13        &kp F14          &kp F15
-               &none           &kp KP_N7      &kp KP_N8      &kp KP_N9        &kp LC(PG_UP)
-               &none           &kp KP_N4      &kp KP_N5      &kp KP_N6        &kp LC(PG_DN)
-               &trans          &kp KP_N1      &kp KP_N2      &kp KP_N3        &kp LC(LS(ENTER))
-               &trans          &kp KP_NUMLOCK &kp KP_N0      &kp DOT          &kp ENTER
-           >;
-
-           sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+           sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP>;
         };
 
         rgb_bt_layer {
              bindings = <
-                &none          &to CALC           &rgb_ug RGB_TOG  &rgb_ug RGB_EFF  &rgb_ug RGB_SPI
+                &none          &to CALC         &rgb_ug RGB_TOG  &rgb_ug RGB_EFF  &rgb_ug RGB_SPI
                 &none          &rgb_ug RGB_HUI  &rgb_ug RGB_SAI  &rgb_ug RGB_BRI  &rgb_ug RGB_SPD
                 &none          &rgb_ug RGB_HUD  &rgb_ug RGB_SAD  &rgb_ug RGB_BRD  &rgb_ug RGB_SPD
-                &trans         &bt BT_NXT       &bt BT_PRV       &bt BT_CLR       &ext_power EP_TOG
-                &trans         &none            &none            &none            &none
+                &kp C_MUTE     &bt BT_NXT       &bt BT_PRV       &bt BT_CLR       &ext_power EP_TOG
+                &none          &none            &none            &out OUT_TOG     &ext_power EP_TOG
             >;
 
-            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
+            sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP>;
         };
 
-        ORTHO_L {
+        extra_layer_1 {
             bindings = <
-               &none           &kp T      &kp G      &kp B       &kp SPACE
-               &none           &kp R      &kp F      &kp V       &kp LALT
-               &none           &kp E      &kp D      &kp C       &kp LWIN
-               &trans          &kp W      &kp S      &kp X       &kp LCTRL
-               &trans          &kp Q      &kp A      &kp Z       &kp LCTRL
-            >;
+               &none           &none                  &moto PORTAL_EXTRA EXTRA2    &ht_macro1 0 0      &ht_macro2 0 0
+               &none           &macro_extra_1         &macro_extra_2               &macro_extra_3      &macro_extra_4
+               &none           &macro_extra_5         &macro_extra_6               &macro_extra_7      &macro_extra_8
+               &kp C_MUTE      &macro_extra_9         &macro_extra_10              &macro_extra_11     &kp ENTER
+               &kp BACKSPACE   &macro_extra_12        &macro_extra_13              &macro_extra_14     &kp ENTER
+           >;
 
-            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
-         };
+           sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP>;
+        };
 
+        extra_layer_2 {
+            bindings = <
+               &none           &toto EXTRA1 EXTRA1    &moto PORTAL_EXTRA EXTRA3    &ht_macro1 0 0      &ht_macro2 0 0
+               &none           &macro_extra_15        &macro_extra_16              &macro_extra_17     &macro_extra_18
+               &none           &macro_extra_19        &macro_extra_20              &macro_extra_21     &macro_extra_22
+               &kp C_MUTE      &macro_extra_23        &macro_extra_24              &macro_extra_25     &kp ENTER
+               &kp BACKSPACE   &macro_extra_26        &macro_extra_27              &macro_extra_28     &kp ENTER
+           >;
+
+           sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP>;
+        };
+
+        extra_layer_3 {
+            bindings = <
+               &none           &toto EXTRA1 EXTRA2    &moto PORTAL_EXTRA EXTRA4    &ht_macro1 0 0      &ht_macro2 0 0
+               &none           &macro_extra_29        &macro_extra_30              &macro_extra_31     &macro_extra_32
+               &none           &macro_extra_33        &macro_extra_34              &macro_extra_35     &macro_extra_36
+               &kp C_MUTE      &macro_extra_37        &macro_extra_38              &macro_extra_39     &kp ENTER
+               &kp BACKSPACE   &macro_extra_40        &macro_extra_41              &macro_extra_42     &kp ENTER
+           >;
+
+           sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP>;
+        };
+
+        extra_layer_4 {
+            bindings = <
+               &none           &toto EXTRA1 EXTRA3    &moto PORTAL_EXTRA EXTRA4    &ht_macro1 0 0      &ht_macro2 0 0
+               &none           &macro_extra_43        &macro_extra_44              &macro_extra_45     &macro_extra_46
+               &none           &macro_extra_47        &macro_extra_48              &macro_extra_49     &macro_extra_50
+               &kp C_MUTE      &macro_extra_51        &macro_extra_52              &macro_extra_53     &kp ENTER
+               &kp BACKSPACE   &macro_extra_54        &macro_extra_55              &macro_extra_56     &kp ENTER
+           >;
+
+           sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP>;
+        };
+
+        portal_extra {
+            bindings = <
+               &none           &none         &none        &none        &none
+               &none           &none         &none        &none        &none
+               &none           &to EXTRA4    &none        &none        &none
+               &kp C_MUTE      &to EXTRA1    &to EXTRA2   &to EXTRA3   &none
+               &none           &none         &to CALC     &none        &none
+           >;
+
+           sensor-bindings = <&inc_dec_kp C_VOL_DN C_VOL_UP>;
+        };
+
+        
     };
 };
